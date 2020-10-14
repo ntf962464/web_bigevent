@@ -29,12 +29,30 @@ $(function () {
     $('#form_reg').on('submit', function (e) {
         e.preventDefault();
         var data = { username: $('.reg-box [name=username]').val(), password: $('.reg-box [name=password]').val() }
-        $.post('http://ajax.frontend.itheima.net/api/reguser', data, function (res) {
+        $.post('/api/reguser', data, function (res) {
             if (res.status !== 0) {
                 return layer.msg(res.message);
             }
             layer.msg(res.message);
             $('#link_login').click();
+        })
+    });
+    //登录触发post事件
+    $('#form_login').submit(function (e) {
+        e.preventDefault();
+        $.ajax({
+            url: '/api/login',
+            method: 'POST',
+            data: $(this).serialize(),
+            success: function (res) {
+                if (res.status !== 0) {
+                    return layer.msg(res.message)
+                }
+                layer.msg(res.message);
+                localStorage.setItem('token', res.token);
+                location.href = './index.html'
+                // console.log(res.token);
+            }
         })
     })
 })
